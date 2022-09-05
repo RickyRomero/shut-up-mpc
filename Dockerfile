@@ -1,4 +1,4 @@
-FROM node:14-alpine
+FROM node:18-alpine
 
 ENV NODE_ENV production
 LABEL "repository"="https://github.com/RickyRomero/shut-up-mpc"
@@ -6,8 +6,6 @@ LABEL "homepage"="https://github.com/RickyRomero/shut-up-mpc"
 LABEL "maintainer"="Ricky Romero <ricky.romero@gmail.com>"
 
 WORKDIR /usr/app
-COPY .yarn ./.yarn
-COPY .yarnrc.yml ./
 COPY package.json ./
 COPY yarn.lock ./
 COPY src ./src
