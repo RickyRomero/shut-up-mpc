@@ -1,5 +1,5 @@
 import path from 'path'
-import fs from 'fs'
+import * as fs from 'node:fs/promises'
 import { promisify } from 'util'
 import * as dotenv from 'dotenv'
 import fetch from 'node-fetch'
@@ -110,7 +110,7 @@ const monitorOperation = async (type, { accessToken, id }) => {
 }
 
 const draftSubmission = async accessToken => {
-  const reviewerNotes = fs.readFileSync(
+  const reviewerNotes = await fs.readFile(
     './reviewer-notes.txt', { encoding: 'utf8' }
   ).trim()
 
