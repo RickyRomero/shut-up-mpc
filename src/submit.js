@@ -3,7 +3,7 @@ import fs from 'fs'
 import { promisify } from 'util'
 import * as dotenv from 'dotenv'
 import fetch from 'node-fetch'
-import pathConfig from './paths.json'
+import pathConfig from './paths.json' assert { type: 'json' }
 
 dotenv.config()
 const pause = promisify(setTimeout)

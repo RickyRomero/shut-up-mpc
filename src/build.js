@@ -1,7 +1,7 @@
 import archiver from 'archiver'
 import fs from 'fs'
 import path from 'path'
-import pathConfig from './paths.json'
+import pathConfig from './paths.json' assert { type: 'json' }
 
 const destPath = path.resolve(__dirname, pathConfig.artifactsDir)
 
