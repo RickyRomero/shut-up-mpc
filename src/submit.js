@@ -111,9 +111,9 @@ const monitorOperation = async (type, { accessToken, id }) => {
 }
 
 const draftSubmission = async accessToken => {
-  const reviewerNotes = (await fs.readFile(
-    './reviewer-notes.txt', { encoding: 'utf8' }
-  )).trim()
+  const notesPath = path.resolve(__dirname, './reviewer-notes.txt')
+  console.log(notesPath)
+  const reviewerNotes = (await fs.readFile(notesPath, { encoding: 'utf8' })).trim()
 
   console.log('Drafting submission...')
   const server = process.env.MPC_API_SERVER
