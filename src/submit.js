@@ -8,7 +8,7 @@ import { __dirname } from './dirname-shim.js'
 
 dotenv.config()
 const pause = promisify(setTimeout)
-const statusCheckLimit = 5
+const statusCheckLimit = 6
 
 const refreshToken = async () => {
   const tokenUrl = process.env.MPC_TOKEN_URL
@@ -37,7 +37,7 @@ const refreshToken = async () => {
 // Returns an operation ID if successful
 const uploadPayload = async accessToken => {
   const payloadPath = path.resolve(__dirname, pathConfig.artifactsDir, 'Shut Up.zip')
-  console.log(payloadPath)
+
   try {
     await fs.access(payloadPath, fs.constants.F_OK)
   } catch (e) {
@@ -90,8 +90,8 @@ const monitorOperation = async (type, { accessToken, id }) => {
   let result = {}
   let status = 'InProgress'
 
-  // Wait for our payload's status to come back
-  while (status === 'InProgress' && checkCount < statusCheckLimit) {
+  // Wait for our operation's status to come back
+  while (status === 'InProgress' && checkCount <= statusCheckLimit) {
     const delay = Math.max(10, 1000 * Math.pow(2, checkCount))
     console.log(`Awaiting result. Next check in ${delay / 1000} seconds...`)
     await pause(delay)
@@ -112,7 +112,6 @@ const monitorOperation = async (type, { accessToken, id }) => {
 
 const draftSubmission = async accessToken => {
   const notesPath = path.resolve(__dirname, './reviewer-notes.txt')
-  console.log(notesPath)
   const reviewerNotes = (await fs.readFile(notesPath, { encoding: 'utf8' })).trim()
 
   console.log('Drafting submission...')
