@@ -1,11 +1,11 @@
+import path from 'path'
+import fs from 'fs'
+import { promisify } from 'util'
+import * as dotenv from 'dotenv'
 import fetch from 'node-fetch'
+import pathConfig from './paths.json'
 
-require('dotenv').config()
-const path = require('path')
-const fs = require('fs')
-const { promisify } = require('util')
-const pathConfig = require('./paths.json')
-
+dotenv.config()
 const pause = promisify(setTimeout)
 const statusCheckLimit = 5
 

@@ -1,7 +1,7 @@
-const archiver = require('archiver')
-const fs = require('fs')
-const path = require('path')
-const pathConfig = require('./paths.json')
+import archiver from 'archiver'
+import fs from 'fs'
+import path from 'path'
+import pathConfig from './paths.json'
 
 const destPath = path.resolve(__dirname, pathConfig.artifactsDir)
 
