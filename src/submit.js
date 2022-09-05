@@ -37,6 +37,7 @@ const refreshToken = async () => {
 // Returns an operation ID if successful
 const uploadPayload = async accessToken => {
   const payloadPath = path.resolve(__dirname, pathConfig.artifactsDir, 'Shut Up.zip')
+  console.log(payloadPath)
   try {
     await fs.access(payloadPath, fs.constants.F_OK)
   } catch (e) {
