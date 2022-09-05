@@ -1,0 +1,8 @@
+name: 'Shut Up MPC'
+description: 'Deploys Shut Up for Edge'
+branding:
+  color: 'blue'
+  icon: 'package'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'

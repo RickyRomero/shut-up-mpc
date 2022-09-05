@@ -1,0 +1,5 @@
+Shut Up blocks comments on all webpages by default, and comments can be shown by clicking its toolbar button.
+
+You can test Shut Up on these URLs to verify whether it's working:
+https://www.reddit.com/r/AskReddit/comments/g17ze6/which_movie_scene_is_musically_scored_perfectly/
+http://m.slashdot.org/story/324165
