@@ -21,12 +21,14 @@ const patchManifest = () => {
 const build = async () => {
   patchManifest()
 
-  const output = fs.createWriteStream(path.join(destPath, 'Shut Up.zip'))
+  const archivePath = path.join(destPath, 'Shut Up.zip')
+  const output = fs.createWriteStream(archivePath)
   const archive = archiver('zip', { zlib: { level: 9 } })
   const globBase = 'Shut Up/**/*'
   const globWd = destPath
 
   output.on('close', () => {
+    console.log(`Wrote archive to ${archivePath}.`)
     console.log(`Compressed payload is ${archive.pointer()} bytes.`)
   })
 
