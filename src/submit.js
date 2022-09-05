@@ -47,11 +47,12 @@ const uploadPayload = async accessToken => {
   }
 
   console.log('Uploading payload...')
+  const archiveHandle = await fs.open(payloadPath)
   const server = process.env.MPC_API_SERVER
   const endpoint = `v1/products/${process.env.MPC_PRODUCT_ID}/submissions/draft/package`
   const response = await fetch(`${server}/${endpoint}`, {
     method: 'POST',
-    body: fs.createReadStream(payloadPath),
+    body: archiveHandle.createReadStream(payloadPath),
     headers: {
       authorization: `Bearer ${accessToken}`,
       'content-type': 'application/zip'
