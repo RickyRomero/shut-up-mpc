@@ -1,8 +1,9 @@
+import fetch from 'node-fetch'
+
 require('dotenv').config()
 const path = require('path')
 const fs = require('fs')
 const { promisify } = require('util')
-const fetch = require('node-fetch')
 const pathConfig = require('./paths.json')
 
 const pause = promisify(setTimeout)
