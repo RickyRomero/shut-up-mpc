@@ -18,5 +18,7 @@ find "/mpc/build/Shut Up/" -name ".*" -exec rm -r {} \; -print
 echo "Building extension..."
 yarn build
 
+ls -la "/mpc/build/" "/mpc/build/Shut Up/"
+
 echo "Submitting extension..."
 yarn submit
