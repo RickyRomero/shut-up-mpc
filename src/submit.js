@@ -4,6 +4,7 @@ import { promisify } from 'util'
 import * as dotenv from 'dotenv'
 import fetch from 'node-fetch'
 import pathConfig from './paths.json' assert { type: 'json' }
+import __dirname from './dirname-shim.js'
 
 dotenv.config()
 const pause = promisify(setTimeout)

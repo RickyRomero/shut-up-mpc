@@ -2,6 +2,7 @@ import archiver from 'archiver'
 import fs from 'fs'
 import path from 'path'
 import pathConfig from './paths.json' assert { type: 'json' }
+import __dirname from './dirname-shim.js'
 
 const destPath = path.resolve(__dirname, pathConfig.artifactsDir)
 
