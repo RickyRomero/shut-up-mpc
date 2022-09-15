@@ -6,21 +6,7 @@ import { __dirname } from './dirname-shim.js'
 
 const destPath = path.resolve(__dirname, pathConfig.artifactsDir)
 
-// Edge-specific manifest mods
-const patchManifest = () => {
-  const fileOpts = { encoding: 'utf8' }
-  const manifestPath = path.join(destPath, 'Shut Up', 'manifest.json')
-  const manifest = JSON.parse(fs.readFileSync(manifestPath, fileOpts))
-
-  manifest.options_ui.page = 'options/index-wrapper.html'
-  manifest.options_ui.open_in_tab = true
-
-  fs.writeFileSync(manifestPath, JSON.stringify(manifest), fileOpts)
-}
-
 const build = async () => {
-  patchManifest()
-
   const archivePath = path.join(destPath, 'Shut Up.zip')
   const output = fs.createWriteStream(archivePath)
   const archive = archiver('zip', { zlib: { level: 9 } })
