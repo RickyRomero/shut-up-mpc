@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:22-alpine
 
 ENV NODE_ENV production
 LABEL "repository"="https://github.com/RickyRomero/shut-up-mpc"
