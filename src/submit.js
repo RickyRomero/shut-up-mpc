@@ -4,7 +4,7 @@ import * as fs from 'node:fs/promises'
 import path from 'path'
 import { promisify } from 'util'
 import { __dirname } from './dirname-shim.js'
-import pathConfig from './paths.json'
+import pathConfig from './paths.json' with { type: 'json' }
 
 dotenv.config()
 const pause = promisify(setTimeout)
