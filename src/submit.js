@@ -1,10 +1,10 @@
-import path from 'path'
-import * as fs from 'node:fs/promises'
-import { promisify } from 'util'
 import * as dotenv from 'dotenv'
 import fetch from 'node-fetch'
-import pathConfig from './paths.json' assert { type: 'json' }
+import * as fs from 'node:fs/promises'
+import path from 'path'
+import { promisify } from 'util'
 import { __dirname } from './dirname-shim.js'
+import pathConfig from './paths.json'
 
 dotenv.config()
 const pause = promisify(setTimeout)
