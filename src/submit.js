@@ -10,32 +10,8 @@ dotenv.config()
 const pause = promisify(setTimeout)
 const statusCheckLimit = 6
 
-const refreshToken = async () => {
-  const tokenUrl = process.env.MPC_TOKEN_URL
-  const params = new URLSearchParams()
-  params.append('client_id', process.env.MPC_CLIENT_ID)
-  params.append('scope', 'https://api.addons.microsoftedge.microsoft.com/.default')
-  params.append('client_secret', process.env.MPC_SECRET)
-  params.append('grant_type', 'client_credentials')
-
-  console.log('Updating access token...')
-  const response = await fetch(tokenUrl, {
-    method: 'POST',
-    body: params
-  })
-  const body = await response.json()
-
-  if (!body.access_token) {
-    console.error('Failed to refresh the MPC OAuth token.')
-    process.exit(1)
-  } else {
-    console.log('Successfully updated access token.')
-    return body.access_token
-  }
-}
-
 // Returns an operation ID if successful
-const uploadPayload = async accessToken => {
+const uploadPayload = async ({ apiKey, clientId }) => {
   const payloadPath = path.resolve(__dirname, pathConfig.artifactsDir, 'Shut Up.zip')
 
   try {
@@ -54,7 +30,8 @@ const uploadPayload = async accessToken => {
     method: 'POST',
     body: archiveHandle.createReadStream(payloadPath),
     headers: {
-      authorization: `Bearer ${accessToken}`,
+      authorization: `ApiKey ${apiKey}`,
+      'x-clientid': clientId,
       'content-type': 'application/zip'
     }
   })
@@ -70,7 +47,7 @@ const uploadPayload = async accessToken => {
   }
 }
 
-const checkOperation = async (type, { accessToken, id }) => {
+const checkOperation = async (type, { apiKey, clientId, id }) => {
   const operationString = type === 'payload' ? 'payload processing' : 'submission'
   const apiSelection = type === 'payload' ? 'draft/package/operations' : 'operations'
 
@@ -78,14 +55,17 @@ const checkOperation = async (type, { accessToken, id }) => {
   const server = process.env.MPC_API_SERVER
   const endpoint = `/v1/products/${process.env.MPC_PRODUCT_ID}/submissions/${apiSelection}/${id}`
   const response = await fetch(`${server}/${endpoint}`, {
-    headers: { authorization: `Bearer ${accessToken}` }
+    headers: {
+      authorization: `ApiKey ${apiKey}`,
+      'x-clientid': clientId,
+    }
   })
 
   const body = await response.json()
   return body
 }
 
-const monitorOperation = async (type, { accessToken, id }) => {
+const monitorOperation = async (type, { apiKey, clientId, id }) => {
   let checkCount = 0
   let result = {}
   let status = 'InProgress'
@@ -96,7 +76,7 @@ const monitorOperation = async (type, { accessToken, id }) => {
     console.log(`Awaiting result. Next check in ${delay / 1000} seconds...`)
     await pause(delay)
 
-    result = await checkOperation(type, { accessToken, id })
+    result = await checkOperation(type, { apiKey, clientId, id })
     status = result.status
     checkCount += 1
   }
@@ -110,7 +90,7 @@ const monitorOperation = async (type, { accessToken, id }) => {
   }
 }
 
-const draftSubmission = async accessToken => {
+const draftSubmission = async ({ apiKey, clientId }) => {
   const notesPath = path.resolve(__dirname, './reviewer-notes.txt')
   const reviewerNotes = (await fs.readFile(notesPath, { encoding: 'utf8' })).trim()
 
@@ -121,7 +101,8 @@ const draftSubmission = async accessToken => {
     method: 'POST',
     body: JSON.stringify({ notes: reviewerNotes }),
     headers: {
-      authorization: `Bearer ${accessToken}`,
+      authorization: `ApiKey ${apiKey}`,
+      'x-clientid': clientId,
       'content-type': 'application/json; charset=utf-8'
     }
   })
@@ -138,12 +119,14 @@ const draftSubmission = async accessToken => {
 }
 
 const submitNewVersion = async () => {
-  const accessToken = await refreshToken()
-  const payloadId = await uploadPayload(accessToken)
-  await monitorOperation('payload', { accessToken, id: payloadId })
+  const apiKey = process.env.MPC_API_KEY
+  const clientId = process.env.MPC_CLIENT_ID
 
-  const submissionId = await draftSubmission(accessToken)
-  await monitorOperation('submission', { accessToken, id: submissionId })
+  const payloadId = await uploadPayload({ apiKey, clientId })
+  await monitorOperation('payload', { apiKey, clientId, id: payloadId })
+
+  const submissionId = await draftSubmission({ apiKey, clientId })
+  await monitorOperation('submission', { apiKey, clientId, id: submissionId })
 }
 
 submitNewVersion()
